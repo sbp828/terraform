@@ -1,11 +1,10 @@
-resource "aws_instance" "test_server"{
-    ami = "ami-0c02fb55956c7d316"
-    vpc_security_group_ids = [aws_security_group.allow_ssh.id]
-    instance_type = "t3.micro"
-    tags = {
-        Name = "test_server"
+resource "aws_instance" "example" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.micro"
 
-    }
+  tags = {
+    Name = "HelloWorld"
+  }
 }
 
 
@@ -32,4 +31,3 @@ resource "aws_security_group" "allow_ssh" {
     CreatedBy = "terraform_user"
   }
 }
-
