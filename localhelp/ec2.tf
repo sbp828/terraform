@@ -1,22 +1,28 @@
-resource "aws_instance" "example" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
+resource "aws_instance" "db"{
+    count = length(var.instance_names)
+    ami = var.ami_image_id
+    vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+    instance_type = var.instance_names[count.index] == "db" ? "t3.small" : "t3.micro"
+    tags = merge(
+      var.common_tags,
+      {
+        Name = var.instance_names[count.index]
+        Module = var.instance_names[count.index]
+      }
 
-  tags = {
-    Name = "HelloWorld"
-  }
+    )
 }
 
 
 resource "aws_security_group" "allow_ssh" {
-  name        = "allow_ssh"
-  description = "Allow ssh traafic"
+  name        = var.sg_name
+  description = var.sg_description
 
    ingress {
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    from_port        = var.ssh_port
+    to_port          = var.ssh_port
+    protocol         = var.protocol
+    cidr_blocks      = var.allowed_cidr
   }
 
   egress {
@@ -26,8 +32,11 @@ resource "aws_security_group" "allow_ssh" {
     cidr_blocks      = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "allow_ssh"
-    CreatedBy = "terraform_user"
-  }
+  tags = merge(
+    var.common_tags,{
+      Name = "common security group"
+    }
+
+  )
 }
+
