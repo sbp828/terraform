@@ -1,4 +1,4 @@
-resource "aws_instance" "db"{
+resource "aws_instance" "localhelp"{
     count = length(var.instance_names)
     ami = var.ami_image_id
     vpc_security_group_ids = [aws_security_group.allow_ssh.id]

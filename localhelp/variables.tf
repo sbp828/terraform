@@ -46,3 +46,10 @@ variable "allowed_cidr"{
 }
 
 #route53 related variables
+variable "zone_id"{
+    default = "Z07241871PKD037TPLRDV"
+}
+
+variable "domain_name"{
+    default = "localhelp.store"
+}
